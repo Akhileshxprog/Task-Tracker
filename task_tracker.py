@@ -7,7 +7,7 @@ def task_tracker():
         for i,task in enumerate(tasks, 1):
             print(f"{i} {task}")
 # Inside "choose" variable user will enter the command they want to perform.
-        choose = input(f"What you like to do: ADD | Update(Task Number) | Done(eg., Done1) | Delete(Task Number) | Quit: ").strip().lower()
+        choose = input(f"What you like to do: add | update(Task Number) | done(e.g., Done1) | delete(e.g., delete 1) | Quit: ").strip().lower()
         if choose == "add":
             task = input("Task: ")
             if task:
@@ -29,5 +29,15 @@ def task_tracker():
                     tasks[num] = done_task
             except IndexError:
                 print("Invalid Task Number")
+        elif choose.startswith("delete"):
+            try:
+                num = int(choose.split()[1]) - 1
+                tasks.pop(num)
+            except IndexError:
+                print("Invalid Task Number")
+        elif choose == "quit":
+            break
+        else:
+            print("Invalid Command")
 
 task_tracker()
