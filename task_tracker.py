@@ -25,7 +25,8 @@ def task_tracker():
             try:
                 num = int(choose.split()[1]) -1
                 if 0 <= num < len(tasks):
-                    done_task = 
+                    done_task = (f"{tasks[num]} ✅")
+                    tasks[num] = done_task
             except IndexError:
                 print("Invalid Task Number")
 
