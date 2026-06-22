@@ -7,16 +7,8 @@ def task_tracker():
     try:
         with open("tasks.json", "r") as file:
             tasks = json.load(file)
-    except FileNotFoundError:
-        tasks = [
-            {
-                "Id": id,
-                "description": task_description
-                # "Status":
-                # "createdAt":
-                # "updatedAt":
-            }
-        ]
+    except (FileNotFoundError, json.JSONDecodeError):
+        tasks = []
 # Using while loop to run the program infinite time until the user give valid command
     while True:
         print("-----Task Tracker CLI-----")
@@ -27,10 +19,13 @@ def task_tracker():
 # If user input is "add" code below will input user for a task then append that task to the tasks list.
         if choose == "add":
             task = input("Task: ")
-            task_description = input("Task discription: ")
-            id = u.uuid4(task)
+            id = str(u.uuid4())
+            task_data = {
+                "Id": id,
+                "description": task,
+            }
             if task:
-                tasks.append(task)
+                tasks.append(task_data)
                 print("Task Added!")
         elif choose.startswith("update"):
             try:
