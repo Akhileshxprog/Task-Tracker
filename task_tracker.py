@@ -2,7 +2,7 @@ import json
 import datetime
 import uuid as u
 
-# Defining a function called task_tracker inside that code all the properties goes.
+# Defining a function called task_tracker inside that function all the code goes.
 def task_tracker():
     try:
         with open("tasks.json", "r") as file:
