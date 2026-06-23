@@ -4,6 +4,11 @@ import uuid as u
 
 # Defining a function called task_tracker inside that function all the code goes.
 def task_tracker():
+
+    def save_task_file(tasks):
+        with open("tasks.json", "w") as file:
+            json.dump(tasks,file)
+
     try:
         with open("tasks.json", "r") as file:
             tasks = json.load(file)
@@ -20,40 +25,48 @@ def task_tracker():
         if choose == "add":
             task = input("Task: ")
             id = str(u.uuid4())
+            status = "todo"
+            createdAt = "NA"
+            updatedAt = "NA"
             task_data = {
                 "Id": id,
-                "description": task,
+                "Description": task,
+                "Status": status,
+                "CreatedAt": createdAt,
+                "UpdatedAt": updatedAt
             }
             if task:
                 tasks.append(task_data)
                 print("Task Added!")
+                save_task_file(tasks)
         elif choose.startswith("update"):
             try:
                 num = int(choose.split()[1]) - 1
                 if  0 <= num < len(tasks):
                     updated_task = input(f"Update Task {num + 1}: ")
-                    tasks[num] = updated_task
+                    tasks[num]["Description"] = updated_task
+                    save_task_file(tasks)
             except IndexError:
                 print("Invalid Task Number")
         elif choose.startswith("done"):
             try:
                 num = int(choose.split()[1]) -1
                 if 0 <= num < len(tasks):
-                    done_task = (f"{tasks[num]} ✅")
-                    tasks[num] = done_task
+                    done_task = ("Done")
+                    tasks[num]["Status"] = done_task
+                    save_task_file(tasks)
             except IndexError:
                 print("Invalid Task Number")
         elif choose.startswith("delete"):
             try:
                 num = int(choose.split()[1]) - 1
                 tasks.pop(num)
+                save_task_file(tasks)
             except IndexError:
                 print("Invalid Task Number")
         elif choose == "quit":
             break
         else:
             print("Invalid Command")
-    with open("tasks.json", "w") as file:
-        json.dump(tasks,file)
 
 task_tracker()
