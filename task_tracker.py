@@ -1,5 +1,5 @@
 import json
-import datetime
+from datetime import datetime
 import uuid as u
 
 # Defining a function called task_tracker inside that function all the code goes.
@@ -26,8 +26,8 @@ def task_tracker():
             task = input("Task: ")
             id = str(u.uuid4())
             status = "todo"
-            createdAt = "NA"
-            updatedAt = "NA"
+            createdAt = datetime.now().strftime("%Y-%m-%d %H:%M")
+            updatedAt = datetime.now().strftime("%Y-%m-%d %H:%M")
             task_data = {
                 "Id": id,
                 "Description": task,
@@ -53,7 +53,9 @@ def task_tracker():
                 num = int(choose.split()[1]) - 1
                 if  0 <= num < len(tasks):
                     updated_task = input(f"Update Task {num + 1}: ")
+                    updated_time = datetime.now().strftime("%Y-%m-%d %H:%M")
                     tasks[num]["Description"] = updated_task
+                    tasks[num]["UpdatedAt"] = updated_time
                     save_task_file(tasks)
             except IndexError:
                 print("Invalid Task Number")
