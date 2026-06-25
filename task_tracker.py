@@ -37,6 +37,9 @@ def task_tracker():
     delete_parser = subparsers.add_parser("delete")
     delete_parser.add_argument("task_num")
 
+    args = parser.parse_args()
+
+    tasks = load_task()
 
 
     
@@ -45,8 +48,8 @@ def task_tracker():
         print(f"{i} {task}")
 # Inside "choose" variable user will enter the command they want to perform.
     # If user input is "add" code below will input user for a task then append that task to the tasks list.
-    if command == "add":
-        task = args.add_parser
+    if args.command == "add":
+        task = args.description
         id = str(u.uuid4())
         status = "todo"
         createdAt = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -62,40 +65,42 @@ def task_tracker():
             tasks.append(task_data)
             print("Task Added!")
             save_task_file(tasks)
-    elif command == "progress":
+    elif args.command == "progress":
         try:
             num = int(args.task_num) - 1
             if 0 <= num < len(tasks):
                 task_progress = "In Progress"
                 tasks[num]["Status"] = task_progress
                 save_task_file(tasks)
+                print("Task in Progress")
         except IndexError:
             print("Invalid Task Number")
-    elif command == "update":
+    elif args.command == "update":
         try:
             num = int(args.task_num) - 1
-            if  0 <= num < len(tasks):
-                updated_task = input(f"Update Task {num + 1}: ")
-                updated_time = datetime.now().strftime("%Y-%m-%d %H:%M")
-                tasks[num]["Description"] = updated_task
-                tasks[num]["UpdatedAt"] = updated_time
+            if  0 <= num < len(tasks): 
+                tasks[num]["Description"] = args.description
+                tasks[num]["UpdatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M")
                 save_task_file(tasks)
+                print("Task Updated")
         except IndexError:
             print("Invalid Task Number")
-    elif command == "done":
+    elif args.command == "done":
         try:
             num = int(args.task_num) -1
             if 0 <= num < len(tasks):
-                done_task = ("Done")
-                tasks[num]["Status"] = done_task
+                tasks[num]["Status"] = "Done"
+                tasks[num]["UpdatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M")
                 save_task_file(tasks)
+                print("Task Completed")
         except IndexError:
             print("Invalid Task Number")
-    elif command == "delete":
+    elif args.command == "delete":
         try:
             num = int(args.task_num) - 1
             tasks.pop(num)
             save_task_file(tasks)
+            print("Task Deleted")
         except IndexError:
             print("Invalid Task Number")
     else:
