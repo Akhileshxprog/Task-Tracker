@@ -3,29 +3,50 @@ from datetime import datetime
 import uuid as u
 import argparse
 
-# Defining a function called task_tracker inside that function all the code goes.
-def task_tracker():
 
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest="command")
-    add_parser = subparsers.add_parser("add")
-
-    def save_task_file(tasks):
+def save_task_file(tasks):
         with open("tasks.json", "w") as file:
             json.dump(tasks,file)
 
+def load_task():
     try:
         with open("tasks.json", "r") as file:
             tasks = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        tasks = []
+        return []
+
+# Defining a function called task_tracker inside that function all the code goes.
+def task_tracker():
+
+    parser = argparse.ArgumentParser(description="Task Manager CLI")
+    subparsers = parser.add_subparsers(dest="command")
+# add
+    add_parser = subparsers.add_parser("add")
+    add_parser.add_argument("description")
+# progress
+    progress_parser = subparsers.add_parser("progress")
+    progress_parser.add_argument("task_num")
+# update 
+    update_parser = subparsers.add_parser("update")
+    update_parser.add_argument("task_num")
+    update_parser.add_argument("description")
+# done
+    done_parser = subparsers.add_parser("done")
+    done_parser.add_argument("task_num")
+# delete
+    delete_parser = subparsers.add_parser("delete")
+    delete_parser.add_argument("task_num")
+
+
+
+    
     print("-----Task Tracker CLI-----")
     for i,task in enumerate(tasks, 1):
         print(f"{i} {task}")
 # Inside "choose" variable user will enter the command they want to perform.
     # If user input is "add" code below will input user for a task then append that task to the tasks list.
     if command == "add":
-        task = input("Task: ")
+        task = args.add_parser
         id = str(u.uuid4())
         status = "todo"
         createdAt = datetime.now().strftime("%Y-%m-%d %H:%M")
