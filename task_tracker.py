@@ -12,14 +12,21 @@ def load_task():
     try:
         with open("tasks.json", "r") as file:
             tasks = json.load(file)
+            return tasks
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 # Defining a function called task_tracker inside that function all the code goes.
 def task_tracker():
 
+    
+
     parser = argparse.ArgumentParser(description="Task Manager CLI")
     subparsers = parser.add_subparsers(dest="command")
+
+# list
+    list_parser = subparsers.add_parser("list")
+    list_parser.add_argument("status", nargs="?")
 # add
     add_parser = subparsers.add_parser("add")
     add_parser.add_argument("description")
@@ -41,27 +48,19 @@ def task_tracker():
 
     tasks = load_task()
 
-
     
-    print("-----Task Tracker CLI-----")
-    for i,task in enumerate(tasks, 1):
-        print(f"{i} {task}")
 # Inside "choose" variable user will enter the command they want to perform.
     # If user input is "add" code below will input user for a task then append that task to the tasks list.
     if args.command == "add":
-        task = args.description
         id = str(u.uuid4())
-        status = "todo"
-        createdAt = datetime.now().strftime("%Y-%m-%d %H:%M")
-        updatedAt = datetime.now().strftime("%Y-%m-%d %H:%M")
         task_data = {
             "Id": id,
-            "Description": task,
-            "Status": status,
-            "CreatedAt": createdAt,
-            "UpdatedAt": updatedAt
+            "Description": args.description,
+            "Status": "todo",
+            "CreatedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "UpdatedAt": datetime.now().strftime("%Y-%m-%d %H:%M")
         }
-        if task:
+        if task_data:
             tasks.append(task_data)
             print("Task Added!")
             save_task_file(tasks)
@@ -69,11 +68,11 @@ def task_tracker():
         try:
             num = int(args.task_num) - 1
             if 0 <= num < len(tasks):
-                task_progress = "In Progress"
-                tasks[num]["Status"] = task_progress
+                tasks[num]["Status"] = "In Progress"
+                tasks[num]["UpdatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M")
                 save_task_file(tasks)
                 print("Task in Progress")
-        except IndexError:
+        except (IndexError, ValueError):
             print("Invalid Task Number")
     elif args.command == "update":
         try:
@@ -83,7 +82,7 @@ def task_tracker():
                 tasks[num]["UpdatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M")
                 save_task_file(tasks)
                 print("Task Updated")
-        except IndexError:
+        except (IndexError, ValueError):
             print("Invalid Task Number")
     elif args.command == "done":
         try:
@@ -93,16 +92,21 @@ def task_tracker():
                 tasks[num]["UpdatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M")
                 save_task_file(tasks)
                 print("Task Completed")
-        except IndexError:
+        except (IndexError, ValueError):
             print("Invalid Task Number")
     elif args.command == "delete":
         try:
             num = int(args.task_num) - 1
-            tasks.pop(num)
-            save_task_file(tasks)
-            print("Task Deleted")
-        except IndexError:
+            if 0 < num >= len(tasks):
+                tasks.pop(num)
+                save_task_file(tasks)
+                print("Task Deleted")
+        except (IndexError, ValueError):
             print("Invalid Task Number")
+    elif args.command == "list":
+        if args.status == None:
+            print(load_task())
+        # elif args.status == ""
     else:
         print("Invalid Command")
 
