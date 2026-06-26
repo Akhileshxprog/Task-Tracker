@@ -106,7 +106,11 @@ def task_tracker():
     elif args.command == "list":
         if args.status == None:
             print(load_task())
-        # elif args.status == ""
+        elif args.status == "done":
+            for task in tasks:
+                if task["Status"] == "Done":
+                    print(task)
+        elif args.status == "not_done"
     else:
         print("Invalid Command")
 
