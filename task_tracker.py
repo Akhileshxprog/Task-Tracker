@@ -110,7 +110,23 @@ def task_tracker():
             for task in tasks:
                 if task["Status"] == "Done":
                     print(task)
-        elif args.status == "not_done"
+                else:
+                    print("No Task Completed")
+                    break
+        elif args.status == "not_done":
+            for task in tasks:
+                if task["Status"] != "Done":
+                    print(task)
+                else:
+                    print("All Task Completed")
+                    break
+        elif args.status == "progress":
+            for task in tasks:
+                if task["Status"] == "In Progress":
+                    print(task)
+                else:
+                    print("No Task In Progress")
+                    break
     else:
         print("Invalid Command")
 
