@@ -60,10 +60,9 @@ def task_tracker():
             "CreatedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "UpdatedAt": datetime.now().strftime("%Y-%m-%d %H:%M")
         }
-        if task_data:
-            tasks.append(task_data)
-            print("Task Added!")
-            save_task_file(tasks)
+        tasks.append(task_data)
+        print("Task Added!")
+        save_task_file(tasks)
     elif args.command == "progress":
         try:
             num = int(args.task_num) - 1
@@ -97,7 +96,7 @@ def task_tracker():
     elif args.command == "delete":
         try:
             num = int(args.task_num) - 1
-            if 0 < num >= len(tasks):
+            if 0 <= num < len(tasks):
                 tasks.pop(num)
                 save_task_file(tasks)
                 print("Task Deleted")
@@ -105,28 +104,33 @@ def task_tracker():
             print("Invalid Task Number")
     elif args.command == "list":
         if args.status == None:
-            print(load_task())
+            for task in tasks:
+                print(task)
         elif args.status == "done":
+            found = False
             for task in tasks:
                 if task["Status"] == "Done":
                     print(task)
-                else:
-                    print("No Task Completed")
-                    break
+                    found = True
+            if not found:
+                print("No Task Completed")
         elif args.status == "not_done":
+            found = False
             for task in tasks:
                 if task["Status"] != "Done":
                     print(task)
-                else:
-                    print("All Task Completed")
-                    break
+                    found = True
+            if not found:
+                print("All Task Completed")
+                    
         elif args.status == "progress":
+            found = False
             for task in tasks:
                 if task["Status"] == "In Progress":
                     print(task)
-                else:
-                    print("No Task In Progress")
-                    break
+                    found = True
+            if not found:
+                print("No Task In Progress")
     else:
         print("Invalid Command")
 
