@@ -48,9 +48,6 @@ def task_tracker():
 
     tasks = load_task()
 
-    
-# Inside "choose" variable user will enter the command they want to perform.
-    # If user input is "add" code below will input user for a task then append that task to the tasks list.
     if args.command == "add":
         id = str(u.uuid4())
         task_data = {
